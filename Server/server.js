@@ -24,6 +24,7 @@ app.use(express.urlencoded({extended: false}))
 app.use('/api/auth' , require('./routes/authRoutes'))
 app.use('/api/admin' , require('./routes/adminRoutes'))
 app.use('/api/books' , require('./routes/bookRoutes'))
+app.use('/api/rfid' , require('./routes/rfidRoutes'))
 
 app.listen(port , () => {
     console.log(`Starting backend server at port : ${port}`.blue);
