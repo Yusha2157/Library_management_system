@@ -1,9 +1,8 @@
-import React from 'react'
-
-function Home() {
+export default function Home() {
   return (
-    <div>Home</div>
-  )
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">Welcome to Smart Library</h1>
+      <p>Manage and explore books smartly with RFID!</p>
+    </div>
+  );
 }
-
-export default Home

@@ -1,4 +1,3 @@
-const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
@@ -74,4 +73,39 @@ const loginUser = async (req , res) => {
     }
 }
 
-module.exports = {registerUser , loginUser}
+const findUser = async(req , res) => {
+    try {
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ message: "No token provided" });
+        }
+
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+        const user = await User.findById(decoded._id).select("-password");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error("Error finding user:", error);
+        return res.status(401).json({ message: "Invalid or expired token" });
+    }
+}
+
+const getUsers = async (req , res) => {
+    try {
+        const users = await User.find();
+
+        res.status(200).json(users);
+    } 
+    catch (error){
+        console.log("Error in fetching users : " + error);
+        res.status(400).json(error);
+    }
+}
+module.exports = {registerUser , loginUser , findUser , getUsers}

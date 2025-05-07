@@ -3,6 +3,8 @@ import {Route, Routes , Navigate} from 'react-router-dom';
 import Home from './pages/Home'
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
   return (
@@ -13,6 +15,9 @@ function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/register' element={<Register/>} />
           <Route path='*' element={<Navigate to='/'/>}/>
+          <Route path="/profile" element={
+          <ProtectedRoute><Profile /></ProtectedRoute>
+        } />
         </Routes>
       </div>
     </div>
