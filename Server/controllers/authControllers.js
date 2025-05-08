@@ -35,7 +35,7 @@ const registerUser = async (req , res) => {
         if (!validator.isStrongPassword(password))
             return res.status(400).json("Password must be a strong password..");
 
-        newUser = new User({name , email , password})
+        const newUser = new User({name , email , password})
 
         const salt = await bcrypt.genSalt(10);
         newUser.password = await bcrypt.hash(newUser.password , salt);
@@ -43,7 +43,13 @@ const registerUser = async (req , res) => {
         await newUser.save();
         const token = createToken(newUser._id);
 
-        res.status(200).json({ _id : newUser._id , name , email , token})
+        res.status(200).json({
+            _id: newUser._id,
+            name,
+            email,
+            isAdmin: newUser.isAdmin,
+            token
+        });
     }
     catch(error){
         console.log("registration error : " + error);
@@ -65,7 +71,13 @@ const loginUser = async (req , res) => {
             return res.status(400).json("Password is incorrect");
 
         const token = createToken(user._id);
-        res.status(200).json({_id : user._id , name : user.name , email , token});
+        res.status(200).json({
+            _id: user._id,
+            name: user.name,
+            email,
+            isAdmin: user.isAdmin,
+            token
+        });
     }
     catch (error){
         console.log("login error : " + error);

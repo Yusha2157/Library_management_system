@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import './RegisterPage.css';
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -36,17 +37,15 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create a new account
-          </h2>
+    <div className="register-container">
+      <div className="register-box">
+        <div className="register-header">
+          <h2>Create a new account</h2>
         </div>
         
         {serverError && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{serverError}</span>
+          <div className="error-message" role="alert">
+            <span>{serverError}</span>
           </div>
         )}
         
@@ -56,73 +55,73 @@ const RegisterPage = () => {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form className="mt-8 space-y-6">
-              <div className="rounded-md shadow-sm space-y-2">
-                <div>
+            <Form className="register-form">
+              <div className="form-group">
+                <div className="input-group">
                   <label htmlFor="name" className="sr-only">Full Name</label>
                   <Field
                     id="name"
                     name="name"
                     type="text"
                     autoComplete="name"
-                    className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="form-input"
                     placeholder="Full Name"
                   />
-                  <ErrorMessage name="name" component="div" className="text-red-500 text-xs mt-1" />
+                  <ErrorMessage name="name" component="div" className="error-text" />
                 </div>
                 
-                <div>
+                <div className="input-group">
                   <label htmlFor="email" className="sr-only">Email address</label>
                   <Field
                     id="email"
                     name="email"
                     type="email"
                     autoComplete="email"
-                    className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="form-input"
                     placeholder="Email address"
                   />
-                  <ErrorMessage name="email" component="div" className="text-red-500 text-xs mt-1" />
+                  <ErrorMessage name="email" component="div" className="error-text" />
                 </div>
                 
-                <div>
+                <div className="input-group">
                   <label htmlFor="password" className="sr-only">Password</label>
                   <Field
                     id="password"
                     name="password"
                     type="password"
                     autoComplete="new-password"
-                    className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="form-input"
                     placeholder="Password"
                   />
-                  <ErrorMessage name="password" component="div" className="text-red-500 text-xs mt-1" />
+                  <ErrorMessage name="password" component="div" className="error-text" />
                 </div>
                 
-                <div>
+                <div className="input-group">
                   <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
                   <Field
                     id="confirmPassword"
                     name="confirmPassword"
                     type="password"
                     autoComplete="new-password"
-                    className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    className="form-input"
                     placeholder="Confirm Password"
                   />
-                  <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-xs mt-1" />
+                  <ErrorMessage name="confirmPassword" component="div" className="error-text" />
                 </div>
               </div>
 
-              <div>
+              <div className="button-group">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="submit-button"
                 >
                   {isSubmitting ? 'Creating account...' : 'Register'}
                 </button>
               </div>
               
-              <div className="text-sm text-center">
-                <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+              <div className="login-link">
+                <Link to="/login">
                   Already have an account? Sign in
                 </Link>
               </div>

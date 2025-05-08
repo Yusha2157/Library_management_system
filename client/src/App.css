@@ -1,0 +1,67 @@
+.app {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Global form styles */
+input, select, textarea {
+  font-family: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Global link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Global error message styles */
+.error-message {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+/* Global success message styles */
+.success-message {
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+  color: #166534;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}

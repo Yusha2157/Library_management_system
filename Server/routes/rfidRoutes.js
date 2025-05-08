@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { handleRFIDScan } = require('../controllers/rfidControllers');
+const fetchUser = require('../middleware/fetchUser');
 
-const {scanRfid} = require('../controllers/rfidControllers');
+// Route for handling RFID scans
+router.post('/scan', fetchUser, handleRFIDScan);
 
-router.post('/scan' , scanRfid);
 module.exports = router;
