@@ -1,40 +1,38 @@
-import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from '../utils/axios';
 
 export const AuthContext = createContext();
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [books, setBooks] = useState([]);
 
   // Check if user is already logged in on mount
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      fetchUserData(token);
+      fetchUserData();
     } else {
       setLoading(false);
     }
   }, []);
 
-  // Set auth token for all future axios requests
-  const setAuthToken = (token) => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      localStorage.setItem('token', token);
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-      localStorage.removeItem('token');
-    }
-  };
-
   // Fetch current user data
-  const fetchUserData = async (token) => {
+  const fetchUserData = async () => {
     try {
-      setAuthToken(token);
-      const response = await axios.get('/api/getmyinfo');
-      setUser(response.data);
+      const response = await axios.get('/auth/userInfo');
+      setUser(response.data); // The backend already sends the correct user object with isAdmin
+      setBooks(response.data.Books || []);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching user data:', err);
@@ -47,14 +45,16 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
-      const response = await axios.post('/api/register', userData);
+      const response = await axios.post('/auth/new', userData);
       const { token } = response.data;
-      setAuthToken(token);
-      await fetchUserData(token);
+      localStorage.setItem('token', token);
+      await fetchUserData();
       return { success: true };
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
-      return { success: false, error: err.response?.data?.message || 'Registration failed' };
+      console.error('Registration error:', err);
+      const errorMessage = err.response?.data?.message || 'Registration failed';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -62,27 +62,40 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       setError(null);
-      const response = await axios.post('/api/login', credentials);
+      const response = await axios.post('/auth/login', credentials);
       const { token } = response.data;
-      setAuthToken(token);
-      await fetchUserData(token);
+      localStorage.setItem('token', token);
+      await fetchUserData();
       return { success: true };
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
-      return { success: false, error: err.response?.data?.message || 'Login failed' };
+      console.error('Login error:', err);
+      const errorMessage = err.response?.data?.message || 'Login failed';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
     }
   };
 
   // Logout user
   const logout = () => {
     setUser(null);
-    setAuthToken(null);
+    localStorage.removeItem('token');
+    setError(null);
   };
 
-  // Check if user is admin
-  const isAdmin = () => {
-    return user && user.role === 'admin';
+  // Get user's borrowed books
+  const getBorrowedBooks = async () => {
+    try {
+      const response = await axios.get('/auth/userInfo');
+      return response.data.borrowedBooks || [];
+    } catch (err) {
+      console.error('Error fetching borrowed books:', err);
+      return [];
+    }
   };
+
+  const filteredBooks = Array.isArray(books) ? books.filter(book => {
+    // ... filtering logic ...
+  }) : [];
 
   return (
     <AuthContext.Provider
@@ -93,7 +106,7 @@ export const AuthProvider = ({ children }) => {
         login,
         register,
         logout,
-        isAdmin,
+        getBorrowedBooks,
       }}
     >
       {children}

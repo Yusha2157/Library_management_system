@@ -17,7 +17,17 @@ const userSchema = new mongoose.Schema({
     isAdmin : {
         type : Boolean ,
         default : false 
-    }
+    },
+    borrowedBooks: [{
+        bookId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Book'
+        },
+        borrowedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 } , {
     timestamps : true
 })

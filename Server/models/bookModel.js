@@ -32,7 +32,7 @@ const BookSchema = new mongoose.Schema({
     } , 
     status : {
         type : String , 
-        default : 'availiable'
+        default : 'available'
     } 
 } , {
     timestamps : true
